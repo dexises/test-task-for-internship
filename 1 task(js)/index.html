@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    
+    th, td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    tr.highlight {
+      background-color: rgb(92, 92, 252);
+      color: white;
+    }
+    
+    tr.usdt {
+      background-color: rgb(83, 199, 83);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <table id="currencyTable">
+    <tr>
+      <th>ID</th>
+      <th>Symbol</th>
+      <th>Name</th>
+    </tr>
+  </table>
+  <script>
+    fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1')
+      .then(response => response.json())
+      .then(data => {
+        const currencyTable = document.getElementById('currencyTable');
+        
+        data.forEach(currency => {
+          const row = currencyTable.insertRow();
+          
+          if (row.rowIndex <= 5) {
+            row.classList.add('highlight');
+          }
+          
+          if (currency.symbol === 'usdt') {
+            row.classList.add('usdt');
+          }
+          
+          const idCell = row.insertCell();
+          const symbolCell = row.insertCell();
+          const nameCell = row.insertCell();
+          
+          idCell.textContent = currency.id;
+          symbolCell.textContent = currency.symbol;
+          nameCell.textContent = currency.name;
+        });
+      })
+      .catch(error => console.error('Error:', error));
+  </script>
+</body>
+</html>
